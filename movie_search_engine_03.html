@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Search Engine III</title>
+    <style>
+      body {
+        background-color: black;
+        font-family: sans-serif;
+      }
+      #card {
+        width: 29%;
+        height: 550px;
+        margin: 30px auto;
+        background-color: rgba(0, 0, 0, 0.726);
+        color: mintcream;
+      }
+      #card > #image {
+        width: 70%;
+        margin-left: 60px;
+      }
+      #img1{
+          width: 100%;
+      }
+      #card > #movie_name {
+        margin-top: -0px;
+        text-align: center;
+      }
+      #card > #imdb {
+        text-align: center;
+      }
+      #released {
+        text-align: center;
+      }
+      .input_button {
+        width: 350px;
+        margin: 50px auto 0px;
+      }
+      .input_button > input,
+      .input_button > button {
+        font-size: 20px;
+        border-radius: 5px;
+      }
+      #button {
+        margin-left: 5px;
+      }
+      .heading {
+        color: mintcream;
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="heading">Movie Search Engine III</h1>
+    <div class="input_button">
+      <input type="text" id="input" />
+      <button id="button">Search</button>
+    </div>
+
+    <div id="card">
+      <img src="" id="img1" />
+      <h1 id="movie_name"></h1>
+      <img src="" id="image" />
+      <p id="released"></p>
+      <p id="imdb"></p>
+    </div>
+
+    <script>
+      var button = document.getElementById("button");
+      var input = document.getElementById("input");
+      var card = document.getElementById("card");
+      var h1 = document.getElementById("movie_name");
+      var image = document.getElementById("image");
+      var p = document.getElementById("imdb");
+      var released = document.getElementById("released");
+      var img1 = document.getElementById("img1");
+
+      button.addEventListener("click", search);
+
+      function search() {
+        h1.innerHTML = "";
+        image.src = "";
+        img1.src = "";
+        p.innerHTML = "";
+        released.innerHTML = "";
+        fetch(`http://www.omdbapi.com/?t=${input.value}&apikey=8a37e6ed`)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (response) {
+            if (response.Response === "False") {
+              image.src =
+                "https://lh3.googleusercontent.com/proxy/a5jnErR-_hpoqV8r9CCgMESAQiuRvwnu2dqK7OB3hp0SlarQmGF3dYYFuV622QFBrWPteHeDa5e-cVjB2RhKuDKch49p19UIQ3J_Go8oeWy7-WeSYT8jQ7yrT5kJPF3HDqY";
+            } else {
+              if (response.imdbRating > 8.5) {
+                img1.src =
+                  "https://www.pnglib.com/wp-content/uploads/2020/08/highly-recommended-banner_5f3475f87b3e3.png";
+                h1.append(response.Title);
+                image.src = response.Poster;
+                p.append(`IMDB Rating = ${response.imdbRating}`);
+                released.append(`Released = ${response.Released}`);
+              } else {
+                h1.append(response.Title);
+                image.src = response.Poster;
+                p.append(`IMDB Rating = ${response.imdbRating}`);
+                released.append(`Released = ${response.Released}`);
+              }
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        input.value = "";
+      }
+    </script>
+  </body>
+</html>
